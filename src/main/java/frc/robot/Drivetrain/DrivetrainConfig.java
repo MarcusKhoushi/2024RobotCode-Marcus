@@ -14,7 +14,7 @@ import frc.robot.Drivetrain.SwerveModule.SwerveModuleConfig;
 public class DrivetrainConfig {
     public class DriveConstants {
         //TODO: figure out PigeonID and change this
-        public static final int pigeonID = 1; 
+        public static final int pigeonID = 13; 
 
         //SDS Constants Class Made to Easily Switch Module Gear Ratios
         public static final SDSConstants chosenModule = SDSConstants.MK4i.Falcon500(SDSConstants.MK4i.driveRatios.L3); 
@@ -94,29 +94,29 @@ public class DrivetrainConfig {
         /* Front Left Module - Module 0 */
         public static final class Mod0 { 
             public static final int driveMotorID = 1;
-            public static final int angleMotorID = 2;
-            public static final int canCoderID = 1;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int angleMotorID = 3;
+            public static final int canCoderID = 2;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(82.05);
             public static final SwerveModuleConfig config = 
                 new SwerveModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
         public static final class Mod1 { 
-            public static final int driveMotorID = 3;
-            public static final int angleMotorID = 4;
-            public static final int canCoderID = 2;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int driveMotorID = 10;
+            public static final int angleMotorID = 12;
+            public static final int canCoderID = 11;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(8.18);
             public static final SwerveModuleConfig config = 
                 new SwerveModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
         /* Back Left Module - Module 2 */
         public static final class Mod2 { 
-            public static final int driveMotorID = 5;
+            public static final int driveMotorID = 4;
             public static final int angleMotorID = 6;
-            public static final int canCoderID = 3;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int canCoderID = 5;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-45.18);
             public static final SwerveModuleConfig config = 
                 new SwerveModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -124,9 +124,9 @@ public class DrivetrainConfig {
         /* Back Right Module - Module 3 */
         public static final class Mod3 { 
             public static final int driveMotorID = 7;
-            public static final int angleMotorID = 8;
-            public static final int canCoderID = 4;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(0.0);
+            public static final int angleMotorID = 9;
+            public static final int canCoderID = 8;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-12.48);
             public static final SwerveModuleConfig config = 
                 new SwerveModuleConfig(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
