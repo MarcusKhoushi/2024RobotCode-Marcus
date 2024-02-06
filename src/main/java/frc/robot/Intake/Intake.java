@@ -1,154 +1,96 @@
-package frc.robot.subsystems;
+package frc.robot.Intake;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase{
+   
+   //Motor Controllers and sensors
+    private TalonFX RollerMotor;
+    private TalonFX PivotMotor;
+    private CANcoder Encoder;
 
-    private TalonFX m_intake;
-    private TalonFX m_intakePivot;
-    private CANcoder m_intakeEncoder;
+    //Control modes and setpoints
+    private VelocityVoltage RollerVelocity = new VelocityVoltage(0);
+    private DutyCycleOut RollerPercentOutput = new DutyCycleOut(0);
+    private PositionDutyCycle PivotPosition = new PositionDutyCycle(0).withEnableFOC(true);
+    private DutyCycleOut PivotPercentOutput = new DutyCycleOut(0);
 
-    private VelocityVoltage intakeVelocity = new VelocityVoltage(0);
-    private DutyCycleOut intakePercentOutput = new DutyCycleOut(0);
-    private PositionDutyCycle intakePivotPosition = new PositionDutyCycle(0);
-    private DutyCycleOut intakePivotPercentOutput = new DutyCycleOut(0);
-
+    // Constructor
     public Intake() {
-
-        m_intake = new TalonFX(Constants.INTAKE_ID, "elevatoryiboi");
-        m_intakePivot = new TalonFX(Constants.INTAKE_PIVOT_ID, "elevatoryiboi");
-        m_intakeEncoder = new CANcoder(Constants.INTAKE_CANCODER_ID, "elevatoryiboi");
-
-        configIntakeCANCoder();
-        configIntakeMotor();
-        configIntakePivotMotor();
-
+        // Initialize motor controllers and sensors
+        RollerMotor = new TalonFX(IntakeConstants.RollerID, "Carnivor");
+        PivotMotor = new TalonFX(IntakeConstants.PivotID, "Carnivor");
+        Encoder= new CANcoder(IntakeConstants.CANCODER_ID, "Carnivor");
+    }
+       public void RollersRun(double velocity) {
+        RollerVelocity.Velocity = velocity;
+        RollerMotor.setControl(RollerVelocity);
     }
 
-    public void intakeRun(double velocity) {
-
-        intakeVelocity.Velocity = velocity;
-        m_intake.setControl(intakeVelocity);
-
+    // Method to set the intake motor output as a percentage
+    public void RollerPercentOutput(double percentOutput) {
+        RollerPercentOutput.Output = percentOutput;
+        RollerMotor.setControl(RollerPercentOutput);
     }
 
-    public void intakePercentOutput(double percentOutput) {
-
-        intakePercentOutput.Output = percentOutput;
-        m_intake.setControl(intakePercentOutput);
-
+    // Method to set the position of the intake pivot
+    public void Pivot(double position) {
+        PivotPosition.Position = position;
+        PivotMotor.setControl(PivotPosition);
     }
 
-    public void intakePivot(double position) {
-
-        intakePivotPosition.Position = position;
-        m_intakePivot.setControl(intakePivotPosition);
-
+    // Method to set the intake pivot motor output as a percentage
+    public void PivotPercentOutput(double percentOutput) {
+        PivotPercentOutput.Output = percentOutput;
+        PivotMotor.setControl(PivotPercentOutput);
     }
 
-    public void intakePivotPercentOutput(double percentOutput) {
-
-        intakePivotPercentOutput.Output = percentOutput;
-        m_intakePivot.setControl(intakePivotPercentOutput);
-
+    // Method to reset the intake pivot encoder position
+    public void resetPivotEncoder() {
+        PivotMotor.setPosition(0);
     }
 
-    public void resetIntakeEncoder() {
-
-        m_intake.setPosition(0);
-
+    // Method to configure the intake pivot motor controller
+    public void configPivotMotor() {
+        PivotMotor.getConfigurator().apply(new TalonFXConfiguration());
+        // TODO: Uncomment when Congfig is done: PivotMotor.getConfigurator().apply(Robot.ctreConfigs.intakePivotFXConfig);
+        resetPivotEncoder();
     }
 
-    public void resetIntakePivotEncoder() {
-
-        m_intake.setPosition(0);
-
+    // Method to configure the intake CANCoder (encoder)
+    public void configCANCoder() {
+        // Add configuration for CANCoder if needed
     }
 
-    public void configIntakeMotor() {
-
-        m_intake.getConfigurator().apply(new TalonFXConfiguration());
-        m_intake.getConfigurator().apply(Robot.ctreConfigs.intakeFXConfig);
-        resetIntakeEncoder();
-
+    // Getter methods for sensor values
+    public double getVelocity() {
+        return RollerMotor.getVelocity().getValueAsDouble();
     }
 
-    public void configIntakePivotMotor() {
-
-        m_intakePivot.getConfigurator().apply(new TalonFXConfiguration());
-        m_intakePivot.getConfigurator().apply(Robot.ctreConfigs.intakePivotFXConfig);
-        resetIntakePivotEncoder();
-
+    public double getPivotPosition() {
+        return PivotMotor.getPosition().getValueAsDouble();
     }
 
-    public void configIntakeCANCoder() {
-
-        m_intakeEncoder.getConfigurator().apply(new CANcoderConfiguration());
-        m_intakeEncoder.getConfigurator().apply(Robot.ctreConfigs.intakeCANcoderConfig);
-
+    public double getPivotRotorPosition() {
+        return PivotMotor.getRotorPosition().getValueAsDouble();
     }
 
-    public double getIntakeVelocity() {
-
-        return m_intake.getVelocity().getValueAsDouble();
-
+    public double getEncoderPosition() {
+        return Encoder.getAbsolutePosition().getValueAsDouble();
     }
-
-    public double getIntakePivotPosition() {
-
-        return m_intakePivot.getPosition().getValueAsDouble();
-
-    }
-
-    public double getIntakePivotRotorPosition() {
-
-        return m_intakePivot.getRotorPosition().getValueAsDouble();
-
-    }
-
-    public double getIntakeEncoderPosition() {
-
-        return m_intakeEncoder.getPosition().getValueAsDouble();
-
-    }
-
-    public enum IntakeState {
-
-        RESET(Constants.INTAKE_PIVOT_RESET, Constants.INTAKE_RESET),
-        INTAKE(Constants.INTAKE_PIVOT_INTAKE, Constants.INTAKE_INTAKE),
-        SHOOT(Constants.INTAKE_PIVOT_FEED, Constants.INTAKE_RESET),
-        AMP(Constants.INTAKE_PIVOT_FEED, Constants.INTAKE_AMP),
-        CLIMB(Constants.INTAKE_PIVOT_CLIMB, Constants.INTAKE_RESET);
-
-        public int intakeSetpoint;
-        public double intakeVelocity;
-        private IntakeState(int pivotSetpoint, double intakeVelocity) {
-            intakeSetpoint = pivotSetpoint;
-            this.intakeVelocity = intakeVelocity;
-        }
-
-    }
-
     @Override
     public void periodic() {
-
-        SmartDashboard.putNumber("Intake Velocity", getIntakeVelocity());
-        SmartDashboard.putNumber("Intake Pivot Position", getIntakePivotPosition());
-        SmartDashboard.putNumber("Intake Encoder Position", getIntakeEncoderPosition());
-        SmartDashboard.putNumber("Intake Pivot Rotor Position", getIntakePivotRotorPosition());
-
+        SmartDashboard.putNumber("Intake Velocity", getVelocity());
+        SmartDashboard.putNumber("Intake Pivot Position", getPivotPosition());
+        SmartDashboard.putNumber("Intake Encoder Position", getEncoderPosition());
+        SmartDashboard.putNumber("Intake Pivot Rotor Position", getPivotRotorPosition());
     }
-    
 }

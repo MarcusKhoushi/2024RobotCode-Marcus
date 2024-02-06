@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 
-public final class Constants extends IntakeConfig{
+public final class Constants{
 
     public static final int INTAKE_ID = 20;
 
