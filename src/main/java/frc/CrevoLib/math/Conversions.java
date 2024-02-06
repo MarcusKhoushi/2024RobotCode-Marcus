@@ -1,4 +1,4 @@
-package frc.robot.CrevoLib.math;
+package frc.CrevoLib.math;
 
 public class Conversions {
     
@@ -41,4 +41,5 @@ public class Conversions {
         double wheelRotations = wheelMeters / circumference;
         return wheelRotations;
     }
+
 }

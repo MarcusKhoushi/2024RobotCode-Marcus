@@ -5,11 +5,13 @@
 package frc.robot;
 
 
+import java.util.logging.Logger;
+
 import org.littletonrobotics.junction.LoggedRobot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.CrevoLib.configs.CTREConfigs;
+import frc.CrevoLib.configs.CTREConfigs;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,6 +33,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    Logger logger = Logger.getLogger("Logger");
     m_robotContainer = new RobotContainer();
   }
 

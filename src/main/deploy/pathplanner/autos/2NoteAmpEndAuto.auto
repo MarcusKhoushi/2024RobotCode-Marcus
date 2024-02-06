@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.618860692266839,
-      "y": 6.744683307548434
+      "x": 1.003163460872377,
+      "y": 5.597247558131481
     },
     "rotation": 0
   },
@@ -20,13 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CurveWithRotation"
+            "pathName": "2NoteAmpEnd"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ZeroHeading"
+            "name": "ResetFieldOrientation"
           }
         }
       ]

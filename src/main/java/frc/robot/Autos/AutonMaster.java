@@ -14,6 +14,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Drivetrain.DrivetrainConfig;
 
 /* MASTER AUTON CLASS */
@@ -36,9 +40,20 @@ public class AutonMaster {
     private static Field2d mGameField;
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
-    public AutonMaster() { 
+    public AutonMaster() {
+        /* Define Named Commands Here */
 
-        configureNamedCommands();
+        //Zero Heading -> use at the beginning and end of every auton
+        NamedCommands.registerCommand("ZeroHeading", new InstantCommand(() -> {
+                                RobotContainer.mSwerveDrivetrain.zeroHeading();}));
+        
+        NamedCommands.registerCommand("ResetFieldOrientation", new InstantCommand( () -> {
+            RobotContainer.mSwerveDrivetrain.swerveOdometry.resetPosition(Rotation2d.fromDegrees(-180), 
+                        RobotContainer.mSwerveDrivetrain.getModulePositions(), 
+                new Pose2d(new Translation2d(1.89, 7.73), Rotation2d.fromDegrees(0)));   
+        }));
+        //Wait Command -> Common Command for Robot to Wait
+        NamedCommands.registerCommand("WaitCommand", new WaitCommand(5));
 
         //Configuring AutoBuilder
         AutoBuilder.configureHolonomic(
@@ -63,27 +78,16 @@ public class AutonMaster {
             RobotContainer.mSwerveDrivetrain 
         );
        
-
-       ShuffleboardTab autonTab = Shuffleboard.getTab("AutonChoser");
-       autonChooser.setDefaultOption("CurveNoRotationAuto", curveNoRotationAuto());
-       autonChooser.addOption("CurveWithRotationAuto", curveWithRotationAuto());
-
-       SmartDashboard.putData("Auto Chooser",autonChooser);
-       autonTab.add(autonChooser);
-       configurePathPlannerLogging();
+        /* Add all auton options here */
+        autonChooser.setDefaultOption("CurveNoRotationAuto", AutoBuilder.buildAuto("CurveNoRotationAuto"));
+        autonChooser.addOption("CurveWithRotationAuto", AutoBuilder.buildAuto("CurveWithRotationAuto"));
+        autonChooser.addOption("2NoteAmpEndAuto", AutoBuilder.buildAuto("2NoteAmpEndAuto"));
+        configurePathPlannerLogging();
     }
     
 
-    public static SendableChooser<Command> getAutonSelector() {
+    public SendableChooser<Command> getAutonSelector() {
         return autonChooser;
-    }
-
-    public Command curveNoRotationAuto() {
-        return new PathPlannerAuto("CurveNoRotationAuto");
-    }
-
-    public Command curveWithRotationAuto() {
-        return new PathPlannerAuto("CurveWithRotationAuto");
     }
 
     private void configurePathPlannerLogging() {
@@ -103,11 +107,4 @@ public class AutonMaster {
         });
     }
 
-    /* Named Commands are like the new "Event Map" */
-    private void configureNamedCommands() {
-        NamedCommands.registerCommand("ZeroHeading", new InstantCommand(() -> {
-                                RobotContainer.mSwerveDrivetrain.gyro.setYaw(RobotContainer.mSwerveDrivetrain.getGyroYaw().getDegrees());}));
-        
-        NamedCommands.registerCommand("StopSwerve", new InstantCommand(RobotContainer.mSwerveDrivetrain::stopSwerve));
-    }
 }
